@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import br.com.devmedia.webservice.model.domain.Produto;
+import br.com.devmedia.webservice.model.domain.RetornoProdutos;
 import br.com.devmedia.webservice.resources.beans.ProdutoFilterBean;
 import br.com.devmedia.webservice.service.ProdutoService;
 
@@ -26,7 +27,7 @@ public class ProdutoResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Produto> getProdutos(@BeanParam ProdutoFilterBean produtoFilter) {
+	public RetornoProdutos getProdutos(@BeanParam ProdutoFilterBean produtoFilter) {
 		if ((produtoFilter.getOffset() >= 0) && (produtoFilter.getLimit() > 0)) {
 			return service.getProdutosByPagination(produtoFilter.getOffset(), produtoFilter.getLimit());
 		}

@@ -30,6 +30,7 @@
 		<jersey.version>2.26-b08</jersey.version>
 	</properties>
 	<dependencies>
+		<!-- BANCO DE DADOS E ORM -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
@@ -40,6 +41,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.38</version>
 		</dependency>
+		<!-- JERSEY -->
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet</artifactId>
@@ -50,7 +52,5 @@
 			<artifactId>jersey-media-json-jackson</artifactId>
 			<version>2.22.2</version>
 		</dependency>
-		
-	
 	</dependencies>
 </project>

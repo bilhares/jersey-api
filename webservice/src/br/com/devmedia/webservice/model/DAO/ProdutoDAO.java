@@ -3,6 +3,8 @@ package br.com.devmedia.webservice.model.DAO;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import br.com.devmedia.webservice.exceptions.DAOException;
 import br.com.devmedia.webservice.exceptions.ErrorCode;
@@ -146,8 +148,9 @@ public class ProdutoDAO {
 		EntityManager em = JPAUtil.getEntityManager();
 
 		try {
-			produtos = em.createQuery("select p from Produto p", Produto.class).setFirstResult(firstResult - 1)
-					.setMaxResults(maxResults).getResultList();
+			Query q = em.createQuery("select p from Produto p", Produto.class);
+			setPage(q, firstResult, maxResults);
+			produtos = q.getResultList();
 		} catch (RuntimeException ex) {
 			throw new DAOException("Erro ao buscar produtos no banco de dados: " + ex.getMessage(),
 					ErrorCode.SERVER_ERROR.getCode());
@@ -160,6 +163,15 @@ public class ProdutoDAO {
 		}
 
 		return produtos;
+	}
+
+	protected void setPage(Query q, int page, int max) {
+		int firstResult = 0;
+		if (page != 0) {
+			firstResult = (page - 1) * max;
+		}
+		q.setFirstResult(firstResult);
+		q.setMaxResults(max);
 	}
 
 	public List<Produto> getByName(String name) {
@@ -181,5 +193,22 @@ public class ProdutoDAO {
 		}
 
 		return produtos;
+	}
+
+	public double getTotalPaginas() {
+		EntityManager em = JPAUtil.getEntityManager();
+		Query q = null;
+
+		try {
+			TypedQuery<Long> query = em.createQuery("select count(p) from Produto p", Long.class);
+			Long qtd = query.getSingleResult();
+			return qtd;
+
+		} catch (Exception e) {
+			throw new DAOException("A consulta não encontrou produtos.", ErrorCode.NOT_FOUND.getCode());
+		} finally {
+			em.close();
+		}
+
 	}
 }

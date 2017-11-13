@@ -4,12 +4,13 @@ import java.util.List;
 
 import br.com.devmedia.webservice.model.DAO.ProdutoDAO;
 import br.com.devmedia.webservice.model.domain.Produto;
+import br.com.devmedia.webservice.model.domain.RetornoProdutos;
 
 public class ProdutoService {
 	private ProdutoDAO dao = new ProdutoDAO();
 
-	public List<Produto> getProdutos() {
-		return dao.getAll();
+	public RetornoProdutos getProdutos() {
+		return gerarRetorno(dao.getAll(), 0, 0);
 	}
 
 	public Produto getProduto(Long id) {
@@ -28,11 +29,21 @@ public class ProdutoService {
 		return dao.delete(id);
 	}
 
-	public List<Produto> getProdutosByPagination(int firstResult, int maxResults) {
-		return dao.getByPagination(firstResult, maxResults);
+	public RetornoProdutos getProdutosByPagination(int firstResult, int maxResults) {
+		return gerarRetorno(dao.getByPagination(firstResult, maxResults), Math.ceil(dao.getTotalPaginas() / maxResults),
+				firstResult);
 	}
 
-	public List<Produto> getProdutoByName(String name) {
-		return dao.getByName(name);
+	public RetornoProdutos getProdutoByName(String name) {
+		return gerarRetorno(dao.getByName(name), 0, 0);
 	}
+
+	private RetornoProdutos gerarRetorno(List<Produto> produtos, double totalPaginas, int paginaAtual) {
+		RetornoProdutos retorno = new RetornoProdutos();
+		retorno.setProdutos(produtos);
+		retorno.setTotalPaginas(totalPaginas);
+		retorno.setPaginaAtual(paginaAtual);
+		return retorno;
+	}
+
 }
